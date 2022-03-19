@@ -1,0 +1,34 @@
+---
+title: "Plot 2"
+author: "Thomas Imanol Rodriguez"
+date: "3/19/2022"
+output: html_document
+---
+# Read data
+
+
+```{r echo=TRUE}
+setwd("C:/Users/imano/Downloads/exdata_data_household_power_consumption")
+data<-read.table("household_power_consumption.txt",skip=1,sep=";")
+names(data)
+names(data)<-c("Date","Time","Global_active_power","Global_reactive_power","Voltage","Global_intensity","Sub_metering_1","Sub_metering_2","Sub_metering_3")
+data1<-subset(data, Date %in% c("1/2/2007","2/2/2007"))
+data1$Date<-as.Date(data1$Date, format="%d/%m/%Y")
+data1$Global_active_power<-as.numeric(data1$Global_active_power)
+data1$Time <- strptime(data1$Time, format="%H:%M:%S")
+datetime <- paste(as.Date(data1$Date), data1$Time)
+data1$Datetime <- as.POSIXct(datetime)
+```
+
+# Plot 2
+
+
+```{r , echo=TRUE}
+plot(data1$Time,data1$Global_active_power,type="l",xlab="",ylab="Global Active Power (kilowatts)", main="Global Active Power Vs Time") 
+
+```
+
+```{r , echo=TRUE}
+png(file="plot2.png", height=480, width=480)
+
+```

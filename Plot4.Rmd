@@ -1,0 +1,44 @@
+---
+title: "Plot 4"
+author: "Thomas Imanol Rodriguez"
+date: "3/19/2022"
+output: html_document
+---
+# Read data
+
+
+```{r echo=TRUE}
+setwd("C:/Users/imano/Downloads/exdata_data_household_power_consumption")
+data<-read.table("household_power_consumption.txt",skip=1,sep=";")
+names(data)
+names(data)<-c("Date","Time","Global_active_power","Global_reactive_power","Voltage","Global_intensity","Sub_metering_1","Sub_metering_2","Sub_metering_3")
+data1<-subset(data, Date %in% c("1/2/2007","2/2/2007"))
+data1$Date<-as.Date(data1$Date, format="%d/%m/%Y")
+data1$Global_active_power<-as.numeric(data1$Global_active_power)
+data1$Time <- strptime(data1$Time, format="%H:%M:%S")
+datetime <- paste(as.Date(data1$Date), data1$Time)
+data1$Datetime <- as.POSIXct(datetime)
+```
+
+
+# Plot 4
+
+```{r , echo=TRUE}
+par(mfrow=c(2,2))
+with(data1,{
+  plot(data1$Time,as.numeric(as.character(data1$Global_active_power)),type="l",  xlab="",ylab="Global Active Power")  
+  plot(data1$Time,as.numeric(as.character(data1$Voltage)), type="l",xlab="datetime",ylab="Voltage")
+  plot(data1$Time,data1$Sub_metering_1,type="n",xlab="",ylab="Energy sub metering")
+   with(data1,lines(Time,as.numeric(as.character(Sub_metering_1))))
+   with(data1,lines(Time,as.numeric(as.character(Sub_metering_2)),col="red"))
+   with(data1,lines(Time,as.numeric(as.character(Sub_metering_3)),col="blue"))
+   legend("topright", lty=1, col=c("black","red","blue"),legend=c("Sub_metering_1","Sub_metering_2","Sub_metering_3"), cex = 0.6)
+  plot(data1$Time,as.numeric(as.character(data1$Global_reactive_power)),type="l",xlab="datetime",ylab="Global_reactive_power")
+})
+
+```
+
+```{r , echo=TRUE}
+png(file="plot4.png", height=480, width=480)
+
+```
